@@ -20,7 +20,7 @@
     <?php print t('
     It seems that You are not defined Google reCAPTCHA public key for this site 
     yet. You can do it <a href="@page-with-keys">here >></a>',
-      array('@page-with-keys' => '/admin/config/spam_protection/google_recaptcha/keys')); ?>
+      array('@page-with-keys' => base_path().'admin/config/spam_protection/google_recaptcha/keys')); ?>
   <?php else: ?>
     <?php print $public_key; ?>
   <?php endif; ?>
@@ -32,7 +32,7 @@
     <?php print t('
     It seems that You are not defined Google reCAPTCHA secret key for this site 
     yet. You can do it <a href="@page-with-keys">here >></a>',
-      array('@page-with-keys' => '/admin/config/spam_protection/google_recaptcha/keys')); ?>
+      array('@page-with-keys' => base_path().'admin/config/spam_protection/google_recaptcha/keys')); ?>
   <?php else: ?>
     <?php print $secret_key; ?>
   <?php endif; ?>
