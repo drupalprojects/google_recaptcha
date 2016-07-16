@@ -74,11 +74,13 @@ function google_recaptcha_form_alter(&$form, &$form_state, $form_id) {
   }
 
   $tune = variable_get('google_recaptcha');
+  if (empty($tune['public_key']) || empty($tune['secret_key'])) {
+    watchdog('Google reCAPTCHA', 'It is necessary to create keys for this site on https://www.google.com/recaptcha and add them to module settings.', array(), WATCHDOG_WARNING);
+    return;
+  }
 
   // For security usability reasons - form for recovery pass always protected
-  $always_protected = array(
-    'user_pass',
-  );
+  $always_protected = array('user_pass',);
 
   drupal_alter('google_recaptcha_always_protect', $always_protected);
 
@@ -92,7 +94,3 @@ function google_recaptcha_form_alter(&$form, &$form_state, $form_id) {
     }
   }
 }
-
-
-
-
