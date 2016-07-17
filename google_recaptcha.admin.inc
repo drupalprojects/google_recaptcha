@@ -54,40 +54,61 @@ Be careful if You have several sites - check that this pair of keys exactly for 
     '#maxlength' => 40,
     '#required' => TRUE,
   );
-  $form['language'] = array(
-    '#title' => t('Google reCAPTCHA language'),
-    '#description' => t('Enter the language code that can be found here: https://developers.google.com/recaptcha/docs/language'),
-    '#type' => 'textfield',
-    '#default_value' => empty($tune['settings']['language']) ? 'en' : $tune['settings']['language'],
-    '#size' => 10,
-    '#maxlength' => 10,
+
+  // widget_settings
+  $form['widget_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Widget settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => FALSE,
   );
-  $form['widget_size'] = array(
-    '#title' => t('Widget size'),
-    '#type' => 'select',
-    '#options' => array('normal' => 'normal', 'compact' => 'compact'),
-    '#default_value' => $tune['settings']['widget_size'],
+    $form['widget_settings']['language'] = array(
+      '#title' => t('Google reCAPTCHA language'),
+      '#description' => t('Enter the language code that can be found here: https://developers.google.com/recaptcha/docs/language'),
+      '#type' => 'textfield',
+      '#default_value' => empty($tune['settings']['language']) ? 'en' : $tune['settings']['language'],
+      '#size' => 10,
+      '#maxlength' => 10,
+    );
+    $form['widget_settings']['widget_size'] = array(
+      '#title' => t('Widget size'),
+      '#type' => 'select',
+      '#options' => array('normal' => 'normal', 'compact' => 'compact'),
+      '#default_value' => $tune['settings']['widget_size'],
+    );
+    $form['widget_settings']['widget_theme'] = array(
+      '#title' => t('Widget theme'),
+      '#type' => 'select',
+      '#options' => array('light' => 'light', 'dark' => 'dark'),
+      '#default_value' => $tune['settings']['widget_theme'],
+    );
+
+  // maintenance_settings
+  $form['maintenance_settings'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Maintenance settings'),
+    '#collapsible' => TRUE,
+    '#collapsed' => TRUE,
   );
-  $form['widget_theme'] = array(
-    '#title' => t('Widget theme'),
-    '#type' => 'select',
-    '#options' => array('light' => 'light', 'dark' => 'dark'),
-    '#default_value' => $tune['settings']['widget_theme'],
-  );
-  $form['collect_statistics'] = array(
-    '#title' => t('Collect statistics'),
-    '#type' => 'checkbox',
-    '#default_value' => $tune['statistics']['status'],
-    '#description' => t('
-Count requests to Google reCAPTCHA servers and their responses. Useful for mainly understanding about the effectiveness this protection system<br/>
-More detailed statistics data You may found in Your <a href="@google-recaptcha-control-panel" target="_blank">control panel</a>.', array('@google-recaptcha-control-panel' => 'https://www.google.com/recaptcha/admin#list')),
-  );
-  $form['write_log'] = array(
-    '#title' => t('Write log'),
-    '#type' => 'checkbox',
-    '#default_value' => $tune['settings']['write_log'],
-    '#description' => t('Write errors results of Google Recaptcha submission into log. Useful for debugging purpose.'),
-  );
+    $form['maintenance_settings']['collect_statistics'] = array(
+      '#title' => t('Collect statistics'),
+      '#type' => 'checkbox',
+      '#default_value' => $tune['statistics']['status'],
+      '#description' => t('Count requests to Google reCAPTCHA servers and their responses. Useful for mainly understanding about the effectiveness this protection system<br/>
+        More detailed statistics data You may found in Your <a href="@google-recaptcha-control-panel" target="_blank">control panel</a>.', array('@google-recaptcha-control-panel' => 'https://www.google.com/recaptcha/admin#list')),
+    );
+    $form['maintenance_settings']['write_log'] = array(
+      '#title' => t('Write log'),
+      '#type' => 'checkbox',
+      '#default_value' => $tune['settings']['write_log'],
+      '#description' => t('Write errors results of Google reCAPTCHA submission into log. Useful for debugging purpose.'),
+    );
+    $form['maintenance_settings']['note'] = array(
+      '#title' => t('Note'),
+      '#type' => 'textarea',
+      '#default_value' => $tune['settings']['note'],
+      '#description' => t('Any text which will display under reCaptcha widget.'),
+    );
 
   $form['submit'] = array(
     '#type' => 'submit',
@@ -137,7 +158,6 @@ function g_tune_submit($form, &$form_state) {
 
   variable_set('google_recaptcha', $tune);
   drupal_set_message(t('Google reCAPTCHA keys and settings were saved'));
-  $form_state['redirect'] = 'admin/config/spam_protection/google_recaptcha';
 }
 
 /**

@@ -69,9 +69,7 @@ function google_recaptcha_menu() {
  */
 function google_recaptcha_form_alter(&$form, &$form_state, $form_id) {
 
-  if (user_is_logged_in()) {
-    return;
-  }
+  if (user_is_logged_in()) {return;}
 
   $tune = variable_get('google_recaptcha');
   if (empty($tune['public_key']) || empty($tune['secret_key'])) {
@@ -87,11 +85,13 @@ function google_recaptcha_form_alter(&$form, &$form_state, $form_id) {
   if (in_array($form_id, $always_protected)) {
     g_add_captcha($form, $form_id);
   }
-
-  foreach ($tune['protected_forms'] as $protected_form_name) {
-    if (strstr($form_id, $protected_form_name)) {
-      g_add_captcha($form, $form_id);
-      break;
+  else {
+    foreach ($tune['protected_forms'] as $protected_form_name) {
+      if (strstr($form_id, $protected_form_name)) {
+        g_add_captcha($form, $form_id);
+        break;
+      }
     }
   }
+
 }
