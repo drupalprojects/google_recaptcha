@@ -7,7 +7,7 @@
  * Available variables
  * - $public_key: Google reCAPTCHA public key
  * - $secret_key: Google reCAPTCHA secret key
- * - $statistics['status']: Is statistics collects or not
+ * - $maintenance_settings['enable_statistics']: Is statistics collects or not
  * - $statistics['requests']: Count of all requests to Google servers
  * - $statistics['success']: Count correct filled reCAPTCHA
  * - $statistics['fails']: Count incorrect filled (or not filled) reCAPTCHA
@@ -39,7 +39,7 @@
 </div>
 
 
-<?php if ($statistics['status'] == 1): ?>
+<?php if ($maintenance_settings['enable_statistics'] == 1): ?>
   <h2><?php print t('Statistics') ?></h2>
   <p><?php print t('Requests: @count', array('@count' => $statistics['requests'])); ?>
     <br/>

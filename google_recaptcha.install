@@ -19,16 +19,19 @@ function google_recaptcha_install() {
       'user_register_form',
     ),
     'statistics' => array(
-      'status' => 1,
       'requests' => 0,
       'success' => 0,
       'fails' => 0,
     ),
-    'settings' => array(
-      'write_log' => 0,
-      'widget_size' => 'normal', // possible values: compact, normal (default).
-      'widget_theme' => 'light', // possible values: dark, light (default).
+    'widget_settings' => array(
+      'size' => 'normal', // possible values: compact, normal (default).
+      'theme' => 'light', // possible values: dark, light (default).
       'language' => 'en', // possible values: https://developers.google.com/recaptcha/docs/language
+    ),
+    'maintenance_settings' => array(
+      'enable_statistics' => 1,
+      'write_log' => 0,
+      'note' => '',
     ),
   );
 
@@ -57,7 +60,7 @@ function google_recaptcha_requirements($phase) {
 
     $tune = variable_get('google_recaptcha');
 
-    // Set message for admin that he must enter keys (if they empty now).
+    // Set message for admin that He or She :) must enter keys (if they empty now).
     if (empty($tune['public_key']) || empty($tune['secret_key'])) {
 
       $description = t('Google reCAPTCHA: You must to define public and secret 
@@ -106,5 +109,34 @@ function google_recaptcha_update_7101() {
   variable_set('google_recaptcha', $tune);
 }
 
+/**
+ * Add new options to settings: 'note'.
+ * Reorganising the array with settings.
+ */
+function google_recaptcha_update_7102() {
+  $tune = variable_get('google_recaptcha');
 
+  $new_tune = array(
+    'public_key' => $tune['public_key'],
+    'secret_key' => $tune['secret_key'],
+    'protected_forms' => $tune['protected_forms'],
+    'statistics' => array(
+      'requests' => $tune['statistics']['requests'],
+      'success' => $tune['statistics']['success'],
+      'fails' => $tune['statistics']['fails'],
+    ),
+    'widget_settings' => array(
+      'size' => $tune['settings']['widget_size'],
+      'theme' => $tune['settings']['widget_theme'],
+      'language' => $tune['settings']['language'],
+    ),
+    'maintenance_settings' => array(
+      'enable_statistics' => $tune['statistics']['status'],
+      'write_log' => $tune['settings']['write_log'],
+      'note' => '',
+    ),
+  );
+
+  variable_set('google_recaptcha', $new_tune);
+}
 

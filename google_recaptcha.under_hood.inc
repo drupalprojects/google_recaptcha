@@ -11,8 +11,8 @@ function g_add_captcha(&$form, $form_id) {
   $tune = variable_get('google_recaptcha');
 
   $url = 'https://www.google.com/recaptcha/api.js?onload=google_recaptcha_onload&render=explicit';
-  if (!empty($tune['settings']['language'])) {
-    $url .= '&hl=' . $tune['settings']['language'];
+  if (!empty($tune['widget_settings']['language'])) {
+    $url .= '&hl=' . $tune['widget_settings']['language'];
   }
 
   $recaptcha_api = array(
@@ -27,8 +27,8 @@ function g_add_captcha(&$form, $form_id) {
   $captcha_form_name = 'google_recaptcha_' . $form_id;
   $captcha_container = '<div id="' . $captcha_form_name . '"></div>';
 
-  $widget_size = $form_id == 'user_login_block' ? 'compact' : $tune['settings']['widget_size'];
-  $widget_theme = $tune['settings']['widget_theme'];
+  $widget_size = $form_id == 'user_login_block' ? 'compact' : $tune['widget_settings']['size'];
+  $widget_theme = $tune['widget_settings']['theme'];
 
   $captcha_js = 'grecaptcha.render("' . $captcha_form_name . '", {
     "sitekey" : "' . $tune['public_key'] . '", 
@@ -44,6 +44,9 @@ function g_add_captcha(&$form, $form_id) {
   $form['#attached']['js'][] = $recaptcha_load;
 
   $form['actions']['submit']['#prefix'] = empty($form['actions']['submit']['#prefix']) ? $captcha_container : $captcha_container . $form['actions']['submit']['#prefix'];
+  if (!empty($tune['maintenance_settings']['note'])) {
+    $form['actions']['submit']['#prefix'] .= '<div class="google-reacaptcha-note">' . $tune['maintenance_settings']['note'] . '</div>';
+  }
   $form['#validate'][] = 'g_validate_submission';
 }
 
@@ -63,7 +66,7 @@ function g_validate_submission($form, &$form_state) {
   $answer = g_ask_google($secret, $response, $remote_ip);
 
   // collect statistics about requests and responses (if enabled)
-  if ($tune['statistics']['status'] == 1) {
+  if ($tune['maintenance_settings']['enable_statistics'] == 1) {
     $tune['statistics']['requests'] += 1;
     empty($answer) ? $tune['statistics']['fails'] += 1 : $tune['statistics']['success'] += 1;
   }
@@ -113,7 +116,7 @@ function g_ask_google($secret, $response, $remoteip) {
       'invalid-input-response' => 'The response parameter is invalid or malformed.',
     );
 
-    if (!empty($response['error-codes']) && $tune['settings']['write_log'] == 1) {
+    if (!empty($response['error-codes']) && $tune['maintenance_settings']['write_log'] == 1) {
       $log_vars = array(
         '@error' => $error_codes[$response['error-codes'][0]],
         '@remoteip' => $remoteip,
