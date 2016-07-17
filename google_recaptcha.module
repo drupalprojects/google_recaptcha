@@ -91,6 +91,7 @@ function google_recaptcha_form_alter(&$form, &$form_state, $form_id) {
   foreach ($tune['protected_forms'] as $protected_form_name) {
     if (strstr($form_id, $protected_form_name)) {
       g_add_captcha($form, $form_id);
+      break;
     }
   }
 }
